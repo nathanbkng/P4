@@ -2,10 +2,12 @@ package com.example.nf_frontend
 
 import androidx.room.Room
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.nf_frontend.data.AppDatabase
 import com.example.nf_frontend.data.courses.CourseEntity
 import com.example.nf_frontend.ui.theme.NFFrontendTheme
@@ -32,7 +40,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
-
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -56,17 +63,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        TopBar()
-                        Spacer(modifier = Modifier.height(12.dp))
-                        ButtonRow()
-                        Spacer(modifier = Modifier.height(8.dp))
-                        AddCourseButton { course ->
-                            CoroutineScope(Dispatchers.IO).launch {
-                                database.courseDao().insertCourse(course)
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        ListOfCourses()
+                        HomeScreen()
                     }
                 }
             }
@@ -74,6 +71,56 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun HomeScreen(){
+    val navController = rememberNavController()
+    var courses by remember { mutableStateOf<List<CourseEntity>>(emptyList()) }
+
+    Log.d("test", courses.toString())
+    NavHost(navController = navController, startDestination = "first_screen" ){
+        composable("first_screen"){
+            MesCourses(navController = navController)
+        }
+        composable("course/{code}", arguments = listOf(
+            navArgument("code"){
+                type = NavType.StringType
+            }
+        )
+        ){
+            idx -> CourseDetail(code = idx.arguments?.getString("code")!!)
+        }
+    }
+}
+
+@Composable
+fun CourseDetail(code : String) {
+    Text(
+        text = "hELLOO ${code}",
+        style = MaterialTheme.typography.headlineLarge,
+    )
+}
+
+@Composable
+fun MesCourses(navController: NavController){
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        TopBar()
+        Spacer(modifier = Modifier.height(12.dp))
+        ButtonRow()
+        Spacer(modifier = Modifier.height(8.dp))
+        AddCourseButton { course ->
+            CoroutineScope(Dispatchers.IO).launch {
+                MainActivity.database.courseDao().insertCourse(course)
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        ListOfCourses(navController)
+    }
+}
 @Composable
 fun TopBar() {
     Row(
@@ -171,7 +218,7 @@ fun AddCourseButton( onAddCourse: (CourseEntity) -> Unit ) {
 }
 
 @Composable
-fun ListOfCourses() {
+fun ListOfCourses(navController: NavController) {
     var courses by remember { mutableStateOf<List<CourseEntity>>(emptyList()) }
 
     LaunchedEffect(Unit) {
@@ -186,13 +233,13 @@ fun ListOfCourses() {
             .padding(horizontal = 16.dp)
     ) {
         courses.forEach { course ->
-            Course(course.code, course.name, Color(course.color))
+            Course(course.code, course.name, Color(course.color), navController)
         }
     }
 }
 
 @Composable
-fun Course(code: String, name: String, color: Color) {
+fun Course(code: String, name: String, color: Color, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -202,7 +249,8 @@ fun Course(code: String, name: String, color: Color) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .clickable { navController.navigate("course/${code}") },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -228,9 +276,9 @@ fun DefaultPreview() {
             Spacer(modifier = Modifier.height(16.dp))
             ButtonRow()
             Spacer(modifier = Modifier.height(16.dp))
-            // AddCourseButton()
+//            AddCourseButton()
             Spacer(modifier = Modifier.height(16.dp))
-            ListOfCourses()
+//            ListOfCourses()
         }
     }
 }
