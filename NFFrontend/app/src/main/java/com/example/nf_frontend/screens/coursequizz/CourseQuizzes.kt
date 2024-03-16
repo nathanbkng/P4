@@ -15,11 +15,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.nf_frontend.screens.coursequizz.composant.addquizz.AddQuizzButton
+import com.example.nf_frontend.screens.coursequizz.composant.addquizz.ListOfQuizzes
 
 @Composable
 fun CourseQuizzes(code : String) {
     Column(
-        modifier = Modifier.padding()
+        modifier = Modifier
+            .padding()
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
     ) {
@@ -46,7 +48,7 @@ fun CourseQuizzes(code : String) {
             style = MaterialTheme.typography.headlineSmall,
             color = Color.Black
         )
-
+        ListOfQuizzes(code)
     }
     Spacer(modifier = Modifier.height(12.dp))
 }
