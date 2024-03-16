@@ -20,5 +20,5 @@ interface CourseDao {
 
     @Transaction
     @Query("SELECT * FROM courses")
-    fun getCourseWithQuizzes() : List<CourseWithQuizzes>
+    fun getCourseWithQuizzes() : Flow<List<CourseWithQuizzes>>
 }
