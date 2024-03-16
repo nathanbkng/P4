@@ -1,4 +1,4 @@
-package com.example.nf_frontend
+package com.example.nf_frontend.screens.homescreen.composant.addcourse
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
