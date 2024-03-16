@@ -18,7 +18,7 @@ data class CourseWithQuizzes(
     @Embedded val course : CourseEntity,
     @Relation(
         parentColumn = "code",
-        entityColumn = "quizzId"
+        entityColumn = "courseLinkedId"
     )
     val quizzes : List<QuizzEntity>
 ){
