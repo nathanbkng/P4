@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -94,10 +95,24 @@ fun HomeScreen(){
 
 @Composable
 fun CourseDetail(code : String) {
-    Text(
-        text = "hELLOO ${code}",
-        style = MaterialTheme.typography.headlineLarge,
-    )
+    Column(
+        modifier = Modifier.padding()
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+    ) {
+        Text(
+            text = "${code}",
+            style = MaterialTheme.typography.displayLarge,
+        )
+        Text(
+            text = "Voici les questionnaires que vous avez créé pour le cours ${code}",
+            style = MaterialTheme.typography.titleMedium,
+            color = Color.Gray
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        AddQuizz()
+    }
+    Spacer(modifier = Modifier.height(12.dp))
 }
 
 @Composable
@@ -131,7 +146,7 @@ fun TopBar() {
     ) {
         Text(
             text = "Mes cours",
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.displayLarge,
             modifier = Modifier.weight(1f)
         )
         IconButton(onClick = { /*TODO*/ }) {
@@ -174,6 +189,7 @@ fun ButtonRow() {
     }
 }
 
+
 @Composable
 fun AddCourseButton( onAddCourse: (CourseEntity) -> Unit ) {
 
@@ -214,6 +230,48 @@ fun AddCourseButton( onAddCourse: (CourseEntity) -> Unit ) {
                 )
             }
         }
+    }
+}
+
+@Composable
+fun AddQuizz() {
+
+    var isFormVisible by remember { mutableStateOf(false) }
+
+    Column {
+        IconButton(
+            onClick = { isFormVisible = true },
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.secondary,
+                    shape = RoundedCornerShape(8.dp)
+                )
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Filled.Add, contentDescription = "Ajouter", tint = Color.White)
+                Text(
+                    text = "Ajouter un Quizz",
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+        }
+
+//        if (isFormVisible) {
+//            Dialog(
+//                onDismissRequest = { isFormVisible = false }
+//            ) {
+//                AddCourseForm(
+//                    onAddCourse = { course ->
+//                        onAddCourse(course)
+//                        isFormVisible = false
+//                    },
+//                    onDismiss = { isFormVisible = false }
+//                )
+//            }
+//        }
     }
 }
 
