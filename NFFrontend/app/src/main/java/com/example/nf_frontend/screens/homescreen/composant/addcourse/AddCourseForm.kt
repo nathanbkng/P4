@@ -21,6 +21,7 @@ fun AddCourseForm(
 ) {
     var courseCode by remember { mutableStateOf("") }
     var courseName by remember { mutableStateOf("") }
+    var selectedColor by remember { mutableStateOf(Color.Blue.toArgb()) }
 
     Column(
         modifier = Modifier
@@ -47,15 +48,22 @@ fun AddCourseForm(
             modifier = Modifier.fillMaxWidth()
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ColorPicker(
+            selectedColor = selectedColor,
+            onColorSelected = { selectedColor = it }
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.Center
         ) {
             Button(
                 onClick = {
-                    val newCourse = CourseEntity(code = courseCode, name = courseName, color = Color.Blue.toArgb())
+                    val newCourse = CourseEntity(code = courseCode, name = courseName, color = selectedColor)
                     onAddCourse(newCourse)
                     onDismiss()
                 },

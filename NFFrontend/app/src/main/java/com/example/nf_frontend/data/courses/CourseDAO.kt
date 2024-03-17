@@ -3,13 +3,14 @@ package com.example.nf_frontend.data.courses
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CourseDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCourse(course: CourseEntity)
 
     @Delete
