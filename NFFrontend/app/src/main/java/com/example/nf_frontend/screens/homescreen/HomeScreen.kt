@@ -23,6 +23,7 @@ import androidx.navigation.navArgument
 import com.example.nf_frontend.MainActivity
 import com.example.nf_frontend.data.courses.CourseEntity
 import com.example.nf_frontend.screens.coursequizz.CourseQuizzes
+import com.example.nf_frontend.screens.formquizz.FormQuizz
 import com.example.nf_frontend.screens.homescreen.composant.ButtonRow
 import com.example.nf_frontend.screens.homescreen.composant.ListOfCourses
 import com.example.nf_frontend.screens.homescreen.composant.TopBar
@@ -47,7 +48,15 @@ fun HomeScreen(){
             }
         )
         ){
-                idx -> CourseQuizzes(code = idx.arguments?.getString("code")!!)
+                idx -> CourseQuizzes(code = idx.arguments?.getString("code")!!, navController)
+        }
+        composable("createQuizz/{code}", arguments = listOf(
+            navArgument("code"){
+                type = NavType.StringType
+            }
+        )
+        ){
+                idx -> FormQuizz(code = idx.arguments?.getString("code")!!)
         }
     }
 }

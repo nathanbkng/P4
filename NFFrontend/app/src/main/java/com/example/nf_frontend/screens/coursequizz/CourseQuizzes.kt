@@ -14,11 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nf_frontend.screens.coursequizz.composant.addquizz.AddQuizzButton
 import com.example.nf_frontend.screens.coursequizz.composant.addquizz.ListOfQuizzes
 
 @Composable
-fun CourseQuizzes(code : String) {
+fun CourseQuizzes(code : String, navController: NavController) {
+
     Column(
         modifier = Modifier
             .padding()
@@ -35,7 +38,7 @@ fun CourseQuizzes(code : String) {
             color = Color.Gray
         )
         Spacer(modifier = Modifier.height(12.dp))
-        AddQuizzButton()
+        AddQuizzButton(code,navController)
         Divider(
             thickness = 1.dp,
             color = Color.Black,
