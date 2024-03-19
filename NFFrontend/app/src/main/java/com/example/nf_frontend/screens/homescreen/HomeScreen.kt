@@ -62,7 +62,7 @@ fun MesCourses(navController: NavController){
     ) {
         TopBar()
         Spacer(modifier = Modifier.height(12.dp))
-        ButtonRow()
+        // ButtonRow()
         Spacer(modifier = Modifier.height(8.dp))
         AddCourseButton { course ->
             CoroutineScope(Dispatchers.IO).launch {

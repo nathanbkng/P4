@@ -35,7 +35,7 @@ fun CourseQuizzes(code : String) {
             color = Color.Gray
         )
         Spacer(modifier = Modifier.height(12.dp))
-        AddQuizzButton()
+        // AddQuizzButton()
         Divider(
             thickness = 1.dp,
             color = Color.Black,
