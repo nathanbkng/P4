@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,24 +54,18 @@ fun ListOfQuizzes(code : String){
         }
     }
 
-//    println("${ courseWithCourses}")
 
-//    print("${code} // ${courseWithCourses}")
     if (quizzes.isNotEmpty()){
-        quizzes.forEach {
-                quizz ->  Quizz(quizz.title, quizz.description)
+        LazyColumn(Modifier.padding(10.dp)) {
+            items(quizzes) {quizz ->  Quizz(quizz.title, quizz.description)}
         }
     }else{
-
-
         Text(text = "Il n'y a aucun questionnaire disponible pour ce cours." +
                 " Veuillez en ajouter un \uD83D\uDE00.",
             textAlign = TextAlign.Center,
             modifier = Modifier.wrapContentHeight(),
-
         )
     }
-    
 }
 
 @Composable

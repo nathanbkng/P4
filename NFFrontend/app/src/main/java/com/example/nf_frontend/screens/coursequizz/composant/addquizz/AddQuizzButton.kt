@@ -1,6 +1,7 @@
 package com.example.nf_frontend.screens.coursequizz.composant.addquizz
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,9 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun AddQuizzButton() {
+fun AddQuizzButton(code:String, navController: NavController) {
 
     var isFormVisible by remember { mutableStateOf(false) }
 
@@ -37,7 +39,10 @@ fun AddQuizzButton() {
                     shape = RoundedCornerShape(8.dp)
                 )
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable { navController.navigate("createQuizz/${code}")  }
+            ) {
                 Icon(Icons.Filled.Add, contentDescription = "Ajouter", tint = Color.White)
                 Text(
                     text = "Ajouter un Quizz",
