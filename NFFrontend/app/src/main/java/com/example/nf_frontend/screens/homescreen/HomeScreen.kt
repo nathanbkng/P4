@@ -56,7 +56,7 @@ fun HomeScreen(){
             }
         )
         ){
-                idx -> FormQuizz(code = idx.arguments?.getString("code")!!)
+                idx -> FormQuizz(code = idx.arguments?.getString("code")!!, navController)
         }
     }
 }
