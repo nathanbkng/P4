@@ -30,13 +30,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.nf_frontend.MainActivity
 import com.example.nf_frontend.data.courses.CourseEntity
 import com.example.nf_frontend.data.courses.CourseWithQuizzes
 import com.example.nf_frontend.data.quizzes.QuizzEntity
 
 @Composable
-fun ListOfQuizzes(code : String){
+fun ListOfQuizzes(code : String, navController: NavController){
 
     var courseWithQuizzes by remember { mutableStateOf<List<CourseWithQuizzes>>(emptyList())}
     var quizzes by remember { mutableStateOf<List<QuizzEntity>>(emptyList())}
@@ -57,7 +58,7 @@ fun ListOfQuizzes(code : String){
 
     if (quizzes.isNotEmpty()){
         LazyColumn(Modifier.padding(10.dp)) {
-            items(quizzes) {quizz ->  Quizz(quizz.title, quizz.description)}
+            items(quizzes) {quizz ->  Quizz(quizz, navController)}
         }
     }else{
         Text(text = "Il n'y a aucun questionnaire disponible pour ce cours." +
@@ -69,7 +70,7 @@ fun ListOfQuizzes(code : String){
 }
 
 @Composable
-fun Quizz(title: String, description: String) {
+fun Quizz(quizz: QuizzEntity, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -80,12 +81,14 @@ fun Quizz(title: String, description: String) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .clickable { navController.navigate("quizz/${quizz.quizzId}") }
+            ,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = title, style = MaterialTheme.typography.titleMedium)
-                Text(text = description,
+                Text(text = quizz.title, style = MaterialTheme.typography.titleMedium)
+                Text(text = quizz.description,
                     style = MaterialTheme.typography.labelSmall,
                     fontStyle = FontStyle.Italic,
                     color = Color.Gray)

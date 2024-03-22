@@ -51,7 +51,7 @@ fun CourseQuizzes(code : String, navController: NavController) {
             style = MaterialTheme.typography.headlineSmall,
             color = Color.Black
         )
-        ListOfQuizzes(code)
+        ListOfQuizzes(code,navController)
     }
     Spacer(modifier = Modifier.height(12.dp))
 }
