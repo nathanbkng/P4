@@ -28,6 +28,7 @@ import com.example.nf_frontend.screens.homescreen.composant.ButtonRow
 import com.example.nf_frontend.screens.homescreen.composant.ListOfCourses
 import com.example.nf_frontend.screens.homescreen.composant.TopBar
 import com.example.nf_frontend.screens.homescreen.composant.addcourse.AddCourseButton
+import com.example.nf_frontend.screens.quizz.QuizzScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,17 +47,22 @@ fun HomeScreen(){
             navArgument("code"){
                 type = NavType.StringType
             }
-        )
-        ){
+        )){
                 idx -> CourseQuizzes(code = idx.arguments?.getString("code")!!, navController)
         }
         composable("createQuizz/{code}", arguments = listOf(
             navArgument("code"){
                 type = NavType.StringType
             }
-        )
-        ){
+        )){
                 idx -> FormQuizz(code = idx.arguments?.getString("code")!!, navController)
+        }
+        composable("quizzes/{quizzId}", arguments = listOf(
+            navArgument("quizzId"){
+                type = NavType.LongType
+            }
+        )){
+                idx -> QuizzScreen(quizzId = idx.arguments?.getLong("quizzId")!!, navController)
         }
     }
 }

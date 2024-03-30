@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.nf_frontend.MainActivity
 import com.example.nf_frontend.data.courses.CourseEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun ListOfCourses(navController: NavController) {
@@ -44,13 +51,33 @@ fun ListOfCourses(navController: NavController) {
             .padding(horizontal = 16.dp)
     ) {
         courses.forEach { course ->
-            Course(course.code, course.name, Color(course.color), navController)
+            Course(
+                course.code,
+                course.name,
+                Color(course.color),
+                navController,
+                onRemoveCourse = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        MainActivity.database.courseDao().deleteCourseWithAssociatedData(
+                            course,
+                            MainActivity.database.quizzDao(),
+                            MainActivity.database.questionDao()
+                        )
+                    }
+                }
+            )
         }
     }
 }
 
 @Composable
-fun Course(code: String, name: String, color: Color, navController: NavController) {
+fun Course(
+    code: String,
+    name: String,
+    color: Color,
+    navController: NavController,
+    onRemoveCourse: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -70,9 +97,17 @@ fun Course(code: String, name: String, color: Color, navController: NavControlle
                     .background(color = color, shape = CircleShape),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Column {
+            Column(
+                modifier = Modifier.weight(1f) // Allow the column to occupy the remaining space
+            ) {
                 Text(text = code, style = MaterialTheme.typography.titleMedium)
                 Text(text = name, style = MaterialTheme.typography.labelSmall)
+            }
+            IconButton(
+                onClick = onRemoveCourse, // Call the provided callback to remove the course
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = "Remove Course")
             }
         }
     }

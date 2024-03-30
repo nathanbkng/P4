@@ -1,21 +1,15 @@
 package com.example.nf_frontend.screens.coursequizz.composant.addquizz
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,13 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.nf_frontend.MainActivity
-import com.example.nf_frontend.data.courses.CourseEntity
 import com.example.nf_frontend.data.courses.CourseWithQuizzes
 import com.example.nf_frontend.data.quizzes.QuizzEntity
 
 @Composable
-fun ListOfQuizzes(code : String){
+fun ListOfQuizzes(code : String, navController: NavController){
 
     var courseWithQuizzes by remember { mutableStateOf<List<CourseWithQuizzes>>(emptyList())}
     var quizzes by remember { mutableStateOf<List<QuizzEntity>>(emptyList())}
@@ -46,7 +40,6 @@ fun ListOfQuizzes(code : String){
             updatedData ->
             run {
                 courseWithQuizzes = updatedData.filter { cwq -> cwq.course.code == code }
-                print(">> ${courseWithQuizzes}")
                 if (courseWithQuizzes[0].quizzes.isNotEmpty()) {
                     quizzes = courseWithQuizzes[0].quizzes
                 }
@@ -57,9 +50,16 @@ fun ListOfQuizzes(code : String){
 
     if (quizzes.isNotEmpty()){
         LazyColumn(Modifier.padding(10.dp)) {
-            items(quizzes) {quizz ->  Quizz(quizz.title, quizz.description)}
+            items(quizzes) { quizz ->
+                Quizz(
+                    quizz.quizzId,
+                    quizz.title,
+                    quizz.description,
+                    navController
+                )
+            }
         }
-    }else{
+    } else {
         Text(text = "Il n'y a aucun questionnaire disponible pour ce cours." +
                 " Veuillez en ajouter un \uD83D\uDE00.",
             textAlign = TextAlign.Center,
@@ -69,7 +69,7 @@ fun ListOfQuizzes(code : String){
 }
 
 @Composable
-fun Quizz(title: String, description: String) {
+fun Quizz(quizzId: Long, title: String, description: String, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -80,7 +80,8 @@ fun Quizz(title: String, description: String) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .clickable { navController.navigate("quizzes/${quizzId}") },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {

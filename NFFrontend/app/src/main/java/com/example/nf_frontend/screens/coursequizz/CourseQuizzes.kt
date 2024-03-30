@@ -33,7 +33,7 @@ fun CourseQuizzes(code : String, navController: NavController) {
             style = MaterialTheme.typography.displayLarge,
         )
         Text(
-            text = "Voici les questionnaires que vous avez créé pour le cours ${code}",
+            text = "Voici les questionnaires que vous avez créés pour le cours ${code}",
             style = MaterialTheme.typography.titleMedium,
             color = Color.Gray
         )
@@ -51,7 +51,7 @@ fun CourseQuizzes(code : String, navController: NavController) {
             style = MaterialTheme.typography.headlineSmall,
             color = Color.Black
         )
-        ListOfQuizzes(code)
+        ListOfQuizzes(code, navController)
     }
     Spacer(modifier = Modifier.height(12.dp))
 }

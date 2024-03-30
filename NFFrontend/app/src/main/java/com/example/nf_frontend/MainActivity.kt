@@ -58,19 +58,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    NFFrontendTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
-            TopBar()
-            Spacer(modifier = Modifier.height(16.dp))
-            ButtonRow()
-            Spacer(modifier = Modifier.height(16.dp))
-//            AddCourseButton()
-            Spacer(modifier = Modifier.height(16.dp))
-//            ListOfCourses()
-        }
-    }
-}

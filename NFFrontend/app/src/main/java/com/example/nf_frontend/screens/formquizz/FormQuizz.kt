@@ -1,8 +1,6 @@
 package com.example.nf_frontend.screens.formquizz
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.nf_frontend.MainActivity
-import com.example.nf_frontend.data.courses.CourseEntity
+import com.example.nf_frontend.data.questions.QuestionEntity
 import com.example.nf_frontend.data.quizzes.QuizzEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +36,6 @@ import kotlinx.coroutines.launch
 fun FormQuizz(code : String, navController: NavController){
     var quizzTitle by remember { mutableStateOf("") }
     var quizzDescription by remember { mutableStateOf("") }
-    var isEnabled by remember { mutableStateOf(true)}
 
     Column(
         modifier = Modifier
@@ -89,17 +87,15 @@ fun FormQuizz(code : String, navController: NavController){
                     fontStyle = FontStyle.Italic)
             },
         )
-        Spacer(modifier = Modifier.padding(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         Button(
             colors = ButtonDefaults.buttonColors(Color.Black) ,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
                 .align(Alignment.CenterHorizontally),
-            enabled = quizzTitle.isNotBlank() && quizzDescription.isNotBlank() && isEnabled,
+            enabled = quizzTitle.isNotBlank() && quizzDescription.isNotBlank(),
             onClick = {
-                if (isEnabled) isEnabled = false
-
                 val newQuizz = QuizzEntity(
                     title = quizzTitle,
                     description = quizzDescription,
