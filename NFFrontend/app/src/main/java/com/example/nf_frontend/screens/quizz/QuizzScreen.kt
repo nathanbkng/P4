@@ -26,6 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.nf_frontend.MainActivity
@@ -39,6 +41,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun QuizzScreen(quizzId: Long, navController: NavController) {
     var quizzWithQuestions by remember { mutableStateOf<QuizzWithQuestions?>(null) }
+    var newQuestions by remember { mutableStateOf< List<QuestionEntity>>(emptyList()) }
 
     LaunchedEffect(quizzId) {
         MainActivity.database.quizzDao().getQuizzWithQuestionsById(quizzId).collect { quizz ->
@@ -48,27 +51,23 @@ fun QuizzScreen(quizzId: Long, navController: NavController) {
 
     // Function to add a new question to the list
     fun addQuestion() {
-        quizzWithQuestions?.let { quizz ->
-            val newQuestion = QuestionEntity(questionText = "", isTrue = true, quizzLinkedId = quizz.quizz.quizzId)
-            val updatedQuestions = quizz.questions.toMutableList().apply { add(newQuestion) }
-            quizzWithQuestions = quizz.copy(questions = updatedQuestions)
-        }
+        val newQuestion = QuestionEntity(questionText = "", isTrue = true, quizzLinkedId = quizzId)
+        val updatedQuestions = newQuestions.toMutableList().apply { add(newQuestion) }
+        newQuestions = updatedQuestions
     }
 
     // Function to save modified questions to the database
     fun saveQuestions() {
-        quizzWithQuestions?.let { quizz ->
-            quizz.questions.forEach { question ->
-                if (question.questionText.isNotEmpty()) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        MainActivity.database.questionDao().insertOrUpdateQuestion(question)
-                    }
+        newQuestions.forEach { question ->
+            if (question.questionText.isNotEmpty()) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    MainActivity.database.questionDao().insertOrUpdateQuestion(question)
                 }
             }
-            navController.popBackStack()
         }
+        navController.popBackStack()
     }
-
+    
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -87,18 +86,51 @@ fun QuizzScreen(quizzId: Long, navController: NavController) {
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
+                Divider(
+                    thickness = 1.dp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
+                )
             }
+
         }
 
-        items(quizzWithQuestions?.questions ?: emptyList()) { question ->
+
+        if (quizzWithQuestions?.questions?.isEmpty() == true){
+            item{
+                Text(
+                    text = "Le questionnaire est vide, veuillez ajouter de nouvelles questions!",
+                    fontStyle = FontStyle.Italic
+                )
+            }
+        }else{
+            item {
+                Text(
+                    text = "Liste des questions déjà comprise dans les questionnaires:",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+            items(quizzWithQuestions?.questions ?: emptyList()) {q ->
+                Text(text = "•  ${q.questionText}", fontStyle = FontStyle.Italic)
+            }
+        }
+        item{
+            Divider(
+                thickness = 1.dp,
+                color = Color.Black,
+                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
+            )
+            Text(text = "Création de nouvelles question:", style = MaterialTheme.typography.headlineSmall)
+        }
+
+
+        items(newQuestions) { question ->
             QuestionCard(
                 question = question,
                 onQuestionChange = { updatedQuestion ->
                     // Update the question in the list
-                    quizzWithQuestions = quizzWithQuestions?.let { quizz ->
-                        val updatedQuestions = quizz.questions.map { if (it == question) updatedQuestion else it }
-                        quizz.copy(questions = updatedQuestions)
-                    }
+                    val updatedQuestions = newQuestions.map { if (it == question) updatedQuestion else it }
+                    newQuestions = updatedQuestions
                 }
             )
             Divider(modifier = Modifier.fillMaxWidth())
