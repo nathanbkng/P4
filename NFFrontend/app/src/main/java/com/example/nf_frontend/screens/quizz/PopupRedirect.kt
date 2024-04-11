@@ -2,11 +2,14 @@ package com.example.nf_frontend.screens.quizz
 
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,7 +34,7 @@ fun PopupRedirect(
     ) {
         Column(Modifier.padding(20.dp)) {
             Text(
-                text = "Vous avez sélectionné le questionnaire : \"${quizz.title}\", que voulez-vous faire pour ce questionnaire ?",
+                text = "Vous avez sélectionné le questionnaire : \n\"${quizz.title}\",\n que voulez-vous faire pour ce questionnaire ?",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.wrapContentSize(align = Alignment.Center),
                 textAlign = TextAlign.Center
@@ -43,6 +46,16 @@ fun PopupRedirect(
                     .width(300.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
+                Button(
+                    colors = ButtonDefaults.buttonColors(Color(0xFF00BFA5)),
+                    onClick = {
+                        navController.navigate("completeQuizz/${quizz.quizzId}")
+                        onDismiss()
+                    },
+                ) {
+                    Text(text = "Compléter le questionnaire!")
+                }
+                Spacer(modifier = Modifier.height(18.dp))
                 Button(
                     onClick = {
                         navController.navigate("questionsForm/${quizz.quizzId}")

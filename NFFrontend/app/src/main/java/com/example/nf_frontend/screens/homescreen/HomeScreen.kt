@@ -31,6 +31,7 @@ import androidx.navigation.navArgument
 import com.example.nf_frontend.MainActivity
 import com.example.nf_frontend.data.courses.CourseEntity
 import com.example.nf_frontend.screens.coursequizz.CourseQuizzes
+import com.example.nf_frontend.screens.fillquizz.QuizzActivity
 import com.example.nf_frontend.screens.formquizz.FormQuizz
 import com.example.nf_frontend.screens.homescreen.composant.ButtonRow
 import com.example.nf_frontend.screens.homescreen.composant.ListOfCourses
@@ -46,7 +47,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(){
     val navController = rememberNavController()
     var courses by remember { mutableStateOf<List<CourseEntity>>(emptyList()) }
-    var showDialog by rememberSaveable { mutableStateOf(true) }
+    var showDialog by rememberSaveable { mutableStateOf(false) }
 
 
     Log.d("test", courses.toString())
@@ -113,6 +114,13 @@ fun HomeScreen(){
             }
         )){
                 idx -> QuizzDetails(quizzId = idx.arguments?.getLong("quizzId")!!)
+        }
+        composable("completeQuizz/{quizzId}", arguments = listOf(
+            navArgument("quizzId"){
+                type = NavType.LongType
+            }
+        )){
+                idx -> QuizzActivity(quizzId = idx.arguments?.getLong("quizzId")!!, navController)
         }
     }
 }
