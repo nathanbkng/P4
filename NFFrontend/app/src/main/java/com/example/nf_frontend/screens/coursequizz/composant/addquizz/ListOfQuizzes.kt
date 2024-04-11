@@ -24,10 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.nf_frontend.MainActivity
 import com.example.nf_frontend.data.courses.CourseWithQuizzes
 import com.example.nf_frontend.data.quizzes.QuizzEntity
+import com.example.nf_frontend.screens.homescreen.composant.addcourse.AddCourseForm
+import com.example.nf_frontend.screens.quizz.PopupRedirect
 
 @Composable
 fun ListOfQuizzes(code : String, navController: NavController){
@@ -52,9 +55,7 @@ fun ListOfQuizzes(code : String, navController: NavController){
         LazyColumn(Modifier.padding(10.dp)) {
             items(quizzes) { quizz ->
                 Quizz(
-                    quizz.quizzId,
-                    quizz.title,
-                    quizz.description,
+                    quizz,
                     navController
                 )
             }
@@ -69,7 +70,9 @@ fun ListOfQuizzes(code : String, navController: NavController){
 }
 
 @Composable
-fun Quizz(quizzId: Long, title: String, description: String, navController: NavController) {
+fun Quizz(quizz:QuizzEntity, navController: NavController) {
+    var isFormVisible by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -81,16 +84,31 @@ fun Quizz(quizzId: Long, title: String, description: String, navController: NavC
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { navController.navigate("quizzes/${quizzId}") },
+                .clickable {
+//                  navController.navigate("quizzes/${quizzId}")
+                    isFormVisible = true
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = title, style = MaterialTheme.typography.titleMedium)
-                Text(text = description,
+                Text(text = quizz.title, style = MaterialTheme.typography.titleMedium)
+                Text(text = quizz.description,
                     style = MaterialTheme.typography.labelSmall,
                     fontStyle = FontStyle.Italic,
                     color = Color.Gray)
             }
+        }
+    }
+
+    if (isFormVisible) {
+        Dialog(
+            onDismissRequest = { isFormVisible = false }
+        ) {
+            PopupRedirect(
+                quizz,
+                onDismiss = { isFormVisible = false },
+                navController
+            )
         }
     }
 }

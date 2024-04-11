@@ -1,6 +1,7 @@
 package com.example.nf_frontend.screens.homescreen.composant.addcourse
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +25,7 @@ fun AddCourseForm(
     var courseName by remember { mutableStateOf("") }
     var selectedColor by remember { mutableStateOf(Color.Blue.toArgb()) }
 
-    Surface(color = Color.White) {
+    Surface(color = Color.White, shape = RoundedCornerShape(20.dp)) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
