@@ -31,9 +31,8 @@ import androidx.navigation.navArgument
 import com.example.nf_frontend.MainActivity
 import com.example.nf_frontend.data.courses.CourseEntity
 import com.example.nf_frontend.screens.coursequizz.CourseQuizzes
-import com.example.nf_frontend.screens.fillquizz.QuizzActivity
+import com.example.nf_frontend.screens.fillquizz.QuizzScaffold
 import com.example.nf_frontend.screens.formquizz.FormQuizz
-import com.example.nf_frontend.screens.homescreen.composant.ButtonRow
 import com.example.nf_frontend.screens.homescreen.composant.ListOfCourses
 import com.example.nf_frontend.screens.homescreen.composant.TopBar
 import com.example.nf_frontend.screens.homescreen.composant.addcourse.AddCourseButton
@@ -115,12 +114,12 @@ fun HomeScreen(){
         )){
                 idx -> QuizzDetails(quizzId = idx.arguments?.getLong("quizzId")!!)
         }
-        composable("completeQuizz/{quizzId}", arguments = listOf(
+        composable("startQuizz/{quizzId}", arguments = listOf(
             navArgument("quizzId"){
                 type = NavType.LongType
             }
         )){
-                idx -> QuizzActivity(quizzId = idx.arguments?.getLong("quizzId")!!, navController)
+            idx -> QuizzScaffold(quizzId = idx.arguments?.getLong("quizzId")!!, mainNavController = navController) ;
         }
     }
 }

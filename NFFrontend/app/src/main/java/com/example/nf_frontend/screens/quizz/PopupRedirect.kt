@@ -49,7 +49,7 @@ fun PopupRedirect(
                 Button(
                     colors = ButtonDefaults.buttonColors(Color(0xFF00BFA5)),
                     onClick = {
-                        navController.navigate("completeQuizz/${quizz.quizzId}")
+                        navController.navigate("startQuizz/${quizz.quizzId}")
                         onDismiss()
                     },
                 ) {
