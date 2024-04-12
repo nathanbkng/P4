@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import android.content.Context
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -34,7 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(){
+fun HomeScreen(context : Context){
     val navController = rememberNavController()
     var courses by remember { mutableStateOf<List<CourseEntity>>(emptyList()) }
 
@@ -48,7 +49,7 @@ fun HomeScreen(){
                 type = NavType.StringType
             }
         )){
-                idx -> CourseQuizzes(code = idx.arguments?.getString("code")!!, navController)
+                idx -> CourseQuizzes(code = idx.arguments?.getString("code")!!, navController, context)
         }
         composable("createQuizz/{code}", arguments = listOf(
             navArgument("code"){

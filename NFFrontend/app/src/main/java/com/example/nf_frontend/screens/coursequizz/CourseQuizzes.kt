@@ -1,5 +1,6 @@
 package com.example.nf_frontend.screens.coursequizz
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +21,7 @@ import com.example.nf_frontend.screens.coursequizz.composant.addquizz.AddQuizzBu
 import com.example.nf_frontend.screens.coursequizz.composant.addquizz.ListOfQuizzes
 
 @Composable
-fun CourseQuizzes(code : String, navController: NavController) {
+fun CourseQuizzes(code : String, navController: NavController, context : Context) {
 
     Column(
         modifier = Modifier
@@ -38,7 +39,7 @@ fun CourseQuizzes(code : String, navController: NavController) {
             color = Color.Gray
         )
         Spacer(modifier = Modifier.height(12.dp))
-        AddQuizzButton(code,navController)
+        AddQuizzButton(code,navController, context)
         Divider(
             thickness = 1.dp,
             color = Color.Black,

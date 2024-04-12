@@ -1,5 +1,6 @@
 package com.example.nf_frontend.screens.coursequizz.composant.addquizz
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -23,9 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.nf_frontend.data.delay.setInexactAlarm
+
 
 @Composable
-fun AddQuizzButton(code:String, navController: NavController) {
+fun AddQuizzButton(code:String, navController: NavController, context : Context) {
 
     var isFormVisible by remember { mutableStateOf(false) }
 
@@ -41,7 +44,10 @@ fun AddQuizzButton(code:String, navController: NavController) {
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable { navController.navigate("createQuizz/${code}")  }
+                modifier = Modifier.clickable {
+                    setInexactAlarm(context, 0, 22, 40)
+                    navController.navigate("createQuizz/${code}")
+                }
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Ajouter", tint = Color.White)
                 Text(

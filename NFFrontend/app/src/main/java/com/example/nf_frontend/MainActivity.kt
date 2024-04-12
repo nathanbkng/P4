@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        HomeScreen()
+                        HomeScreen(this@MainActivity)
                     }
                 }
             }
