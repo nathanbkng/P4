@@ -55,7 +55,7 @@ fun QuizzScaffold (
                     idx -> QuizzActivity(quizzId = idx.arguments?.getLong("quizzId")!!,
                     mainNavController, navController)
                 }
-                composable("completeQuizz/{quizzId}/{indexQuestion}", arguments = listOf(
+                composable("completeQuizz/{quizzId}/{indexQuestion}?score={score}", arguments = listOf(
                     navArgument("quizzId"){
                         type = NavType.LongType;
                         defaultValue = quizzId
@@ -63,11 +63,29 @@ fun QuizzScaffold (
                     navArgument("indexQuestion"){
                         type = NavType.IntType;
                         defaultValue = 0
+                    },
+                    navArgument("score"){
+                        defaultValue = 0
                     }
                 )){
-                    idx -> QuizzPage(quizzId = idx.arguments?.getLong("quizzId")!!,
+                    idx -> QuizzPage(
+                    quizzId = idx.arguments?.getLong("quizzId")!!,
                     indexQuestion = idx.arguments?.getInt("indexQuestion")!!,
+                    idx.arguments?.getInt("score")!!,
                     navController)
+                }
+                composable("completeQuizz/end/{quizz}/{score}", arguments = listOf(
+                    navArgument("quizzId"){
+                        type = NavType.LongType;
+                        defaultValue = quizzId
+                    },
+                    navArgument("score"){
+                        type = NavType.IntType;
+                        defaultValue = 0
+                    })){
+                    backStackEntry ->
+                    QuizzEndPage(score = backStackEntry.arguments?.getInt("score")!!,
+                        quizzId = backStackEntry.arguments?.getLong("quizzId")!!)
                 }
 
             }

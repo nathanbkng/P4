@@ -35,12 +35,13 @@ import com.example.nf_frontend.data.questions.QuestionEntity
 import com.example.nf_frontend.data.quizzes.QuizzEntity
 
 @Composable
-fun QuizzPage(quizzId: Long, indexQuestion: Int, navController: NavHostController){
+fun QuizzPage(quizzId: Long, indexQuestion: Int, score :Int , navController: NavHostController){
 
     var currentQuestion by remember { mutableStateOf<QuestionEntity?>(null) }
     var currentQuizz by remember { mutableStateOf<QuizzEntity?>(null) }
     var numberQuestionInQuizz by remember { mutableStateOf<Int>(0) }
     var userResponse : Boolean? by remember { mutableStateOf(null) }
+    println("score now : $score")
     LaunchedEffect(quizzId) {
         MainActivity.database.quizzDao().getQuizzWithQuestionsById(quizzId).collect {
             qwq ->
@@ -55,7 +56,6 @@ fun QuizzPage(quizzId: Long, indexQuestion: Int, navController: NavHostControlle
             .fillMaxSize()
           ,
         horizontalAlignment = Alignment.CenterHorizontally, // Aligns children horizontally
-
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Header(title = currentQuizz?.title)
@@ -64,15 +64,18 @@ fun QuizzPage(quizzId: Long, indexQuestion: Int, navController: NavHostControlle
             indexQuestion,
             response = userResponse,
             onUserResponseChange = { newValue -> userResponse = newValue }
-            )
+        )
         Spacer(modifier = Modifier.height(12.dp))
         if (userResponse != null) {
             FooterQuestion(
-                mainNavController = null,
-                navController = navController,
-                indexQuestion = indexQuestion,
-                numberQuestionInQuizz = numberQuestionInQuizz,
-                quizzId = quizzId,
+                null,
+                navController,
+                indexQuestion,
+                numberQuestionInQuizz,
+                quizzId,
+                userResponse!!,
+                currentQuestion!!.isTrue,
+                score
             )
         }
     }
@@ -115,12 +118,15 @@ fun BodyQuestion(
         ResponseRow(
             response = response,
             onUserResponseChange
-            )
+        )
     }
 }
 
 @Composable
-fun ResponseRow(response: Boolean?, onUserResponseChange: (Boolean?) -> Unit, ) {
+fun ResponseRow(
+    response: Boolean?,
+    onUserResponseChange: (Boolean?) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,8 +141,6 @@ fun ResponseRow(response: Boolean?, onUserResponseChange: (Boolean?) -> Unit, ) 
                 .padding(4.dp)
                 .weight(1f),
             colors = ButtonDefaults.buttonColors()
-//                if (selectedOption.value) Color.Green else Color.Gray
-//            )
         ) {
             Text(text = "True", color = Color.White)
         }
@@ -147,9 +151,7 @@ fun ResponseRow(response: Boolean?, onUserResponseChange: (Boolean?) -> Unit, ) 
             modifier = Modifier
                 .padding(4.dp)
                 .weight(1f),
-            colors = ButtonDefaults.buttonColors(
-//                if (!selectedOption.value) Color.Red else Color.Gray
-            )
+            colors = ButtonDefaults.buttonColors()
         ) {
             Text(text = "False", color = Color.White)
         }
@@ -166,7 +168,10 @@ fun FooterQuestion(
     indexQuestion: Int,
     numberQuestionInQuizz: Int,
     quizzId: Long,
-    ) {
+    userResponse: Boolean,
+    correctRes: Boolean,
+    score: Int
+) {
 
     var finished : Boolean = isQuizzFinished(indexQuestion,numberQuestionInQuizz)
     Box(
@@ -175,27 +180,16 @@ fun FooterQuestion(
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-/*            Button(
-                onClick = { mainNavController.popBackStack() },
-                shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(Color.Red),
-                modifier = Modifier
-                    .height(IntrinsicSize.Min)
-                    .padding(end = 8.dp),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBackIosNew,
-                    contentDescription = "Quit Quizz"
-                )
-            }
-*/
             Button(
                 onClick = {
+
                     if (!finished){
-                        navController.navigate("completeQuizz/" + "${quizzId}/${indexQuestion+1}")
+                        navController.navigate("completeQuizz/"
+                                + "${quizzId}/${indexQuestion+1}" +
+                                "?score=${score + correctUserResponse(userResponse,correctRes)}")
+
                     }else{
-                        println("STOPPPPPP")
+                        navController.navigate("completeQuizz/end/${quizzId}/${score + correctUserResponse(userResponse,correctRes)}")
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -212,4 +206,8 @@ fun FooterQuestion(
             }
         }
     }
+}
+
+fun correctUserResponse(userResponse: Boolean, correctRes: Boolean): Int {
+    return if (userResponse == correctRes) 1 else 0
 }
