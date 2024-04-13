@@ -1,5 +1,6 @@
 package com.example.nf_frontend.screens.fillquizz
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,14 +36,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.nf_frontend.MainActivity
-import com.example.nf_frontend.data.quizzes.QuizzEntity
 
 import com.example.nf_frontend.data.quizzes.QuizzWithQuestions
 
 
 @Composable
-fun QuizzActivity(quizzId: Long, mainNavController: NavController){
+fun QuizzActivity(
+    quizzId: Long,
+    mainNavController: NavController,
+    navController: NavHostController){
     var quizzWithQuestions by remember { mutableStateOf<QuizzWithQuestions?>(null) }
     LaunchedEffect(quizzId) {
         MainActivity.database.quizzDao().getQuizzWithQuestionsById(quizzId).collect { quizz ->
@@ -60,7 +64,7 @@ fun QuizzActivity(quizzId: Long, mainNavController: NavController){
         quizzWithQuestions.let { quizzWithQuestions ->
             Header(quizzWithQuestions?.quizz?.title)
             Body(quizzWithQuestions?.questions?.size)
-            Footer(mainNavController)
+            Footer(mainNavController,navController,quizzWithQuestions)
         }
     }
 }
@@ -83,7 +87,7 @@ fun Header(title:String?) {
 }
 
 @Composable
-fun Footer(navController: NavController) {
+fun Footer(mainNavController: NavController,navController: NavController, quizzWithQuestions: QuizzWithQuestions?) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,7 +95,7 @@ fun Footer(navController: NavController) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Button(
-                onClick = { navController.popBackStack() },
+                onClick = { mainNavController.popBackStack() },
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(Color.Red),
                 modifier = Modifier
@@ -101,12 +105,20 @@ fun Footer(navController: NavController) {
             ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBackIosNew,
-                        contentDescription = "Add Question"
+                        contentDescription = "Quit Quizz"
                     )
             }
 
             Button(
-                onClick = { },
+                onClick = {
+                    quizzWithQuestions.let { q ->
+                        var nextQuestionId = q?.questions?.get(0)?.questionId
+                        Log.println(Log.DEBUG, "debug", ">>> here : $nextQuestionId")
+                        navController.navigate(
+                            "completeQuizz/" +
+                                    "${q?.quizz?.quizzId}/${0}")
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(Color(0XFF039dfc)),
                 modifier = Modifier
                     .fillMaxWidth()
