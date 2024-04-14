@@ -22,6 +22,4 @@ interface QuestionDAO {
     @Query("SELECT * FROM questions WHERE questionId = :questionId")
     fun getQuestionById(questionId: Long): Flow<QuestionEntity?>
 
-    @Query("SELECT COUNT(*) FROM questions WHERE quizzLinkedId = :quizzId")
-    fun getQuestionCountForQuiz(quizzId: Long): Flow<Int>
 }

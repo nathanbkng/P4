@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,6 +29,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.nf_frontend.MainActivity
 import com.example.nf_frontend.data.quizzes.QuizzWithQuestions
+import com.example.nf_frontend.data.scores.ScoreEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun QuizzEndPage(score : Int, quizzId: Long, previousNavController: NavController) {
@@ -50,7 +53,14 @@ fun QuizzEndPage(score : Int, quizzId: Long, previousNavController: NavControlle
     ) {
         Header(title = currentQuizzWQ?.quizz?.title)
         Body(score, currentQuizzWQ?.questions?.size)
-        Footer(previousNavController)
+        Footer(
+            previousNavController,
+            score, currentQuizzWQ?.questions?.size,quizzId
+        ) { score ->
+            CoroutineScope(Dispatchers.IO).launch {
+                MainActivity.database.scoreDao().insertScore(score)
+            }
+        }
     }
 }
 
@@ -85,7 +95,11 @@ fun Body(score: Int, total: Int?){
     }
 }
 @Composable
-fun Footer(previousNavController: NavController){
+fun Footer(
+    previousNavController: NavController,
+    score: Int, total: Int?, quizzId: Long,
+    onAddScore: (ScoreEntity) -> Unit
+           ){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,7 +108,13 @@ fun Footer(previousNavController: NavController){
         Row(verticalAlignment = Alignment.CenterVertically) {
             Button(
                 onClick = {
-                          previousNavController.popBackStack()
+                    val newScore = ScoreEntity(
+                        score = score.toDouble(),
+                        totalGrade = total!!,
+                        quizzLinkedId = quizzId
+                    )
+                    onAddScore(newScore)
+                    previousNavController.popBackStack()
                 },
                 colors = ButtonDefaults.buttonColors(
                     Color(0xFF8BC34A)
