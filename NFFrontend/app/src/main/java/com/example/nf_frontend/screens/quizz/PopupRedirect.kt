@@ -14,12 +14,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.nf_frontend.MainActivity
 import com.example.nf_frontend.data.quizzes.QuizzEntity
 
 @Composable
@@ -28,6 +35,13 @@ fun PopupRedirect(
     onDismiss: () -> Unit,
     navController: NavController
 ) {
+    var countQuestions by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(quizz) {
+        MainActivity.database.questionDao().getQuestionCountForQuizz(quizz.quizzId).collect {
+            countQuestions = it
+        }
+    }
     Surface(
         color = Color.White,
         shape = RoundedCornerShape(20.dp)
@@ -46,16 +60,18 @@ fun PopupRedirect(
                     .width(300.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Button(
-                    colors = ButtonDefaults.buttonColors(Color(0xFF00BFA5)),
-                    onClick = {
-                        navController.navigate("startQuizz/${quizz.quizzId}")
-                        onDismiss()
-                    },
-                ) {
-                    Text(text = "Compléter le questionnaire!")
+                if (countQuestions > 0){
+                    Button(
+                        colors = ButtonDefaults.buttonColors(Color(0xFF00BFA5)),
+                        onClick = {
+                            navController.navigate("startQuizz/${quizz.quizzId}")
+                            onDismiss()
+                        },
+                    ) {
+                        Text(text = "Compléter le questionnaire!")
+                    }
+                    Spacer(modifier = Modifier.height(18.dp))
                 }
-                Spacer(modifier = Modifier.height(18.dp))
                 Button(
                     onClick = {
                         navController.navigate("questionsForm/${quizz.quizzId}")
