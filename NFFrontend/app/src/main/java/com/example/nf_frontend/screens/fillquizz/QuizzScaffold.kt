@@ -85,7 +85,8 @@ fun QuizzScaffold (
                     })){
                     backStackEntry ->
                     QuizzEndPage(score = backStackEntry.arguments?.getInt("score")!!,
-                        quizzId = backStackEntry.arguments?.getLong("quizzId")!!)
+                        quizzId = backStackEntry.arguments?.getLong("quizzId")!!,
+                        mainNavController)
                 }
 
             }
