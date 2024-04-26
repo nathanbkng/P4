@@ -19,7 +19,8 @@ import com.example.nf_frontend.data.questions.QuestionEntity
 @Composable
 fun QuestionCard(
     question: QuestionEntity,
-    onQuestionChange: (QuestionEntity) -> Unit
+    index: Int,
+    onQuestionChange: (QuestionEntity, Int) -> Unit
 ) {
     val selectedOption = remember { mutableStateOf(question.isTrue) }
 
@@ -32,7 +33,7 @@ fun QuestionCard(
         TextField(
             value = question.questionText,
             onValueChange = { newText ->
-                onQuestionChange(question.copy(questionText = newText))
+                onQuestionChange(question.copy(questionText = newText), index)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -46,7 +47,7 @@ fun QuestionCard(
             Button(
                 onClick = {
                     selectedOption.value = true
-                    onQuestionChange(question.copy(isTrue = true))
+                    onQuestionChange(question.copy(isTrue = true), index)
                 },
                 modifier = Modifier
                     .padding(4.dp)
@@ -60,7 +61,7 @@ fun QuestionCard(
             Button(
                 onClick = {
                     selectedOption.value = false
-                    onQuestionChange(question.copy(isTrue = false))
+                    onQuestionChange(question.copy(isTrue = false), index)
                 },
                 modifier = Modifier
                     .padding(4.dp)
