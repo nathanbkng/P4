@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.example.nf_frontend.data.questions.QuestionEntity
+import com.example.nf_frontend.data.scores.ScoreEntity
 
 @Entity(tableName = "quizzes")
 data class QuizzEntity(
@@ -24,3 +25,12 @@ data class QuizzWithQuestions(
     val questions: List<QuestionEntity>
 ){
 }
+
+data class QuizzWithScores(
+    @Embedded val quizz: QuizzEntity,
+    @Relation(
+        parentColumn = "quizzId",
+        entityColumn = "quizzLinkedId"
+    )
+    val scores: List<ScoreEntity>
+){}
