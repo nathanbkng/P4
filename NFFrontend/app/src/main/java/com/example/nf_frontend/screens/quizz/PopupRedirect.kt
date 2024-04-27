@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.nf_frontend.MainActivity
 import com.example.nf_frontend.data.quizzes.QuizzEntity
+import com.example.nf_frontend.data.scores.ScoreEntity
+
 
 @Composable
 fun PopupRedirect(
@@ -36,23 +38,35 @@ fun PopupRedirect(
     navController: NavController
 ) {
     var countQuestions by remember { mutableIntStateOf(0) }
+    var bestscore by remember { mutableStateOf<ScoreEntity?>(null) }
 
-    LaunchedEffect(quizz) {
+   LaunchedEffect(quizz) {
         MainActivity.database.questionDao().getQuestionCountForQuizz(quizz.quizzId).collect {
             countQuestions = it
         }
     }
+
+    LaunchedEffect(quizz) {
+        MainActivity.database.scoreDao().getBestScoreForQuizz(quizz.quizzId).collect {
+            bestscore = it
+        }
+    }
+
     Surface(
         color = Color.White,
         shape = RoundedCornerShape(20.dp)
     ) {
+
         Column(Modifier.padding(20.dp)) {
             Text(
-                text = "Vous avez sélectionné le questionnaire : \n\"${quizz.title}\",\n que voulez-vous faire pour ce questionnaire ?",
+                text = "Vous avez sélectionné le questionnaire : \n\"${quizz.title}\",\n que voulez-vous faire pour ce questionnaire ?" +
+                        if (bestscore!= null ) "\n\n Votre meilleur score est de : \n ${bestscore!!.score}/${bestscore!!.totalGrade} \n (${(bestscore!!.score/ bestscore!!.totalGrade)*100}%) " else "",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.wrapContentSize(align = Alignment.Center),
                 textAlign = TextAlign.Center
             )
+
+
             Column(
                 modifier = Modifier
                     .padding(16.dp)
