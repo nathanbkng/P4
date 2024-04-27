@@ -124,12 +124,14 @@ fun QuizzScreen(quizzId: Long, navController: NavController) {
         }
 
 
-        items(newQuestions) { question ->
+        items(newQuestions.mapIndexed { index, question -> question to index }) { (question, index) ->
             QuestionCard(
                 question = question,
-                onQuestionChange = { updatedQuestion ->
-                    // Update the question in the list
-                    val updatedQuestions = newQuestions.map { if (it == question) updatedQuestion else it }
+                index = index,
+                onQuestionChange = { updatedQuestion, questionIndex ->
+                    val updatedQuestions = newQuestions.toMutableList().apply {
+                        set(questionIndex, updatedQuestion)
+                    }
                     newQuestions = updatedQuestions
                 }
             )
