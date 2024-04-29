@@ -56,7 +56,7 @@ fun QuestionCard(
                     if (selectedOption.value) Color.Green else Color.Gray
                 )
             ) {
-                Text(text = "True", color = Color.White)
+                Text(text = "Vrai", color = Color.White)
             }
             Button(
                 onClick = {
@@ -70,7 +70,7 @@ fun QuestionCard(
                     if (!selectedOption.value) Color.Red else Color.Gray
                 )
             ) {
-                Text(text = "False", color = Color.White)
+                Text(text = "Faux", color = Color.White)
             }
         }
     }

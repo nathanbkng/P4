@@ -142,7 +142,7 @@ fun ResponseRow(
                 .weight(1f),
             colors = ButtonDefaults.buttonColors()
         ) {
-            Text(text = "True", color = Color.White)
+            Text(text = "Vrai", color = Color.White)
         }
         Button(
             onClick = {
@@ -153,7 +153,7 @@ fun ResponseRow(
                 .weight(1f),
             colors = ButtonDefaults.buttonColors()
         ) {
-            Text(text = "False", color = Color.White)
+            Text(text = "Faux", color = Color.White)
         }
     }
 }

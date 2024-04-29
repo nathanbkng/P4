@@ -161,7 +161,7 @@ fun QuizzScreen(quizzId: Long, navController: NavController) {
                         .fillMaxWidth()
                         .padding(end = 12.dp)
                 ) {
-                    Text(text = "Save Questions")
+                    Text(text = "Sauvegarder les questions")
                 }
             }
         }

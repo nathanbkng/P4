@@ -60,7 +60,7 @@ fun PopupRedirect(
         Column(Modifier.padding(20.dp)) {
             Text(
                 text = "Vous avez sélectionné le questionnaire : \n\"${quizz.title}\",\n que voulez-vous faire pour ce questionnaire ?" +
-                        if (bestscore!= null ) "\n\n Votre meilleur score est de : \n ${bestscore!!.score}/${bestscore!!.totalGrade} \n (${(bestscore!!.score/ bestscore!!.totalGrade)*100}%) " else "",
+                        if (bestscore!= null ) "\n\n Votre meilleur score est de : \n ${bestscore!!.score}/${bestscore!!.totalGrade} \n (${String.format("%.${2}f", ((bestscore!!.score/ bestscore!!.totalGrade)*100))}%) " else "",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.wrapContentSize(align = Alignment.Center),
                 textAlign = TextAlign.Center

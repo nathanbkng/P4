@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(){
     val navController = rememberNavController()
     var courses by remember { mutableStateOf<List<CourseEntity>>(emptyList()) }
-    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var showDialog by rememberSaveable { mutableStateOf(true) }
 
 
     Log.d("test", courses.toString())
@@ -62,14 +62,13 @@ fun HomeScreen(){
                         Text(text = "Bienvenue 😁🤓")
                     },
                     text = {
-                        Text(text = "Les membres de l'équipe NeverForget sont heureux de vous présenter une " +
-                                "première version de l'application qui vous permettra de gérer votre étude continue au cours de vos " +
+                        Text(text = "Les membres de l'équipe NeverForget sont heureux de vous présenter la " +
+                                "seconde version de l'application qui vous permettra de gérer votre étude continue au cours de vos " +
                                 "différents quadrimestres.\n" +
                                 "\n" +
-                                "Dans la version actuelle, vous serez capable de créer différents questionnaires pour chacun de vos cours.\n" +
+                                "Dans cette version, vous serez capable de créer des questionnaires (de type \"Vrai ou Faux\") et de vous entraîner sur ceux-ci.\n" +
                                 "\n" +
-                                "Dans la prochaine version, vous pourrez vous entraîner à y répondre !\n" +
-                                "(Cette fonctionnalité est en cours de développement)." )
+                                "N'hésitez pas à nous faire un feedback afin d'améliorer l'expérience utilisateur.\n")
                     },
                     confirmButton = {
                         Button(

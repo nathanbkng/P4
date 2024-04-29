@@ -27,8 +27,8 @@ fun TopBar() {
             style = MaterialTheme.typography.displayLarge,
             modifier = Modifier.weight(1f)
         )
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(Icons.Filled.Person, contentDescription = null)
-        }
+//        IconButton(onClick = { /*TODO*/ }) {
+//            Icon(Icons.Filled.Person, contentDescription = null)
+//        }
     }
 }
