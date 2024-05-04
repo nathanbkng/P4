@@ -1,5 +1,7 @@
 package com.example.nf_frontend.screens.homescreen
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,11 +45,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(){
+fun HomeScreen(context: Context, intent: Intent? = null){
     val navController = rememberNavController()
     var courses by remember { mutableStateOf<List<CourseEntity>>(emptyList()) }
     var showDialog by rememberSaveable { mutableStateOf(true) }
-
 
     Log.d("test", courses.toString())
     NavHost(navController = navController, startDestination = "first_screen" ){
@@ -97,7 +98,7 @@ fun HomeScreen(){
                 type = NavType.StringType
             }
         )){
-                idx -> FormQuizz(code = idx.arguments?.getString("code")!!, navController)
+                idx -> FormQuizz(code = idx.arguments?.getString("code")!!, navController, context)
         }
         composable("questionsForm/{quizzId}", arguments = listOf(
             navArgument("quizzId"){
@@ -121,6 +122,21 @@ fun HomeScreen(){
             idx -> QuizzScaffold(quizzId = idx.arguments?.getLong("quizzId")!!, mainNavController = navController) ;
         }
     }
+
+    // Si l'intent est non null et contient des données spécifiques à la notification,
+    // naviguer vers QuizzScaffold
+    if (intent != null && intent.hasExtra("notification_data")) {
+        val notificationData = intent.getBundleExtra("notification_data")
+        // Extraire les données nécessaires de l'intent
+        val quizzId = notificationData?.getLong("quizzId")
+        val code = notificationData?.getString("code")
+        Log.d("     HomeScreen  ", "Code = $code")
+        if (quizzId != null) {
+            navController.navigate("course/$code")
+            navController.navigate("startQuizz/$quizzId")
+        }
+    }
+
 }
 
 @Composable

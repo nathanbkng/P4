@@ -1,5 +1,6 @@
 package com.example.nf_frontend
 
+import android.os.Build
 import androidx.room.Room
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,6 +31,7 @@ import com.example.nf_frontend.screens.homescreen.composant.addcourse.AddCourseF
 import com.example.nf_frontend.ui.theme.NFFrontendTheme
 
 class MainActivity : ComponentActivity() {
+
     companion object {
         lateinit var database: AppDatabase
             private set
@@ -43,6 +45,9 @@ class MainActivity : ComponentActivity() {
             AppDatabase::class.java, "my-database"
         ).build()
 
+
+        val notificationIntent = intent?.takeIf { it.hasExtra("notification_data") }
+
         setContent {
             NFFrontendTheme {
                 // A surface container using the 'background' color from the theme
@@ -51,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        HomeScreen()
+                        HomeScreen(this@MainActivity, notificationIntent)
                     }
                 }
             }

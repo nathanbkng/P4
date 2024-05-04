@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface QuizzDAO{
     @Insert
-    suspend fun insertQuizz(quizz: QuizzEntity)
+    suspend fun insertQuizz(quizz: QuizzEntity):Long
 
     @Delete
     suspend fun deleteQuizz(quizz: QuizzEntity)
